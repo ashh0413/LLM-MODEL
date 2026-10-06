@@ -3,17 +3,35 @@
 @tailwind utilities;
 
 :root {
-  --bg-primary: #0a0a0f;
-  --bg-surface: #13131a;
-  --bg-elevated: #1a1a24;
-  --border: #2a2a3a;
-  --text-primary: #f0f0f5;
-  --text-secondary: #8888aa;
-  --accent: #7c5cfc;
-  --accent-dim: rgba(124, 92, 252, 0.15);
-  --attention-high: #ff6b6b;
-  --attention-mid: #ffd93d;
-  --attention-low: #6bcb77;
+  --bg-primary: #ffffff;
+  --bg-surface: #f5f5f7;
+  --bg-elevated: #ffffff;
+  --border: #d2d2d7;
+  --text-primary: #1d1d1f;
+  --text-secondary: #86868b;
+  --accent: #0071e3;
+  --accent-hover: #0077ED;
+  --accent-dim: rgba(0, 113, 227, 0.1);
+  --attention-high: #ff3b30;
+  --attention-mid: #ff9500;
+  --attention-low: #34c759;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #000000;
+    --bg-surface: #1c1c1e;
+    --bg-elevated: #2c2c2e;
+    --border: #38383a;
+    --text-primary: #f5f5f7;
+    --text-secondary: #98989d;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,0.5);
+  }
 }
 
 * {
@@ -23,21 +41,24 @@
 body {
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--border);
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -45,13 +66,13 @@ body {
 }
 
 .font-mono {
-  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-family: "SF Mono", "Fira Code", "Menlo", monospace;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
@@ -60,5 +81,14 @@ body {
 }
 
 .animate-fadeIn {
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+.animate-pulse {
+  animation: pulse 1.5s ease-in-out infinite;
 }

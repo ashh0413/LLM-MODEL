@@ -20,7 +20,7 @@ export default function ChatSidebar({
     <aside
       className="flex flex-col h-full"
       style={{
-        width: 260,
+        width: 280,
         background: "var(--bg-surface)",
         borderRight: "1px solid var(--border)",
       }}
@@ -28,45 +28,51 @@ export default function ChatSidebar({
       <div className="p-4">
         <button
           onClick={onNew}
-          className="w-full py-2 rounded-xl font-semibold text-sm transition-all"
+          className="w-full py-2.5 rounded-lg font-semibold text-sm transition-all hover:opacity-90 active:scale-98"
           style={{
             background: "var(--accent)",
             color: "#fff",
+            boxShadow: "var(--shadow-sm)",
           }}
         >
           + New Chat
         </button>
       </div>
 
-      <nav className="flex-1 overflow-y-auto px-2 pb-4">
-        {conversations.map((conv) => (
-          <div
-            key={conv.id}
-            className="group flex items-center gap-1 mb-1 rounded-xl px-3 py-2 cursor-pointer transition-all"
-            style={{
-              background: activeId === conv.id ? "var(--accent-dim)" : "transparent",
-              color: activeId === conv.id ? "var(--accent)" : "var(--text-secondary)",
-            }}
-            onClick={() => onSelect(conv.id)}
-          >
-            <span
-              className="flex-1 truncate text-sm"
-              style={{ color: "inherit" }}
-            >
-              {conv.title}
-            </span>
+      <nav className="flex-1 overflow-y-auto px-3 pb-4">
+        <div className="space-y-0.5">
+          {conversations.map((conv) => (
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(conv.id);
+              key={conv.id}
+              className="w-full text-left px-3 py-2.5 rounded-lg text-sm transition-all group flex items-center gap-2"
+              style={{
+                background: activeId === conv.id ? "var(--accent-dim)" : "transparent",
+                color: activeId === conv.id ? "var(--accent)" : "var(--text-primary)",
               }}
-              className="opacity-0 group-hover:opacity-100 text-xs px-1 rounded transition-opacity"
-              style={{ color: "var(--attention-high)" }}
+              onClick={() => onSelect(conv.id)}
             >
-              ✕
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              <span className="flex-1 truncate">
+                {conv.title}
+              </span>
+              <span
+                className="opacity-0 group-hover:opacity-100 text-xs px-1.5 py-0.5 rounded transition-opacity"
+                style={{
+                  background: "var(--bg-elevated)",
+                  color: "var(--text-secondary)"
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(conv.id);
+                }}
+              >
+                ×
+              </span>
             </button>
-          </div>
-        ))}
+          ))}
+        </div>
       </nav>
     </aside>
   );

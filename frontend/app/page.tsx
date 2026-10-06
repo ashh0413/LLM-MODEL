@@ -1,68 +1,104 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center gap-12 px-6">
-      <div className="text-center">
-        <h1
-          className="font-bold tracking-tight mb-3"
-          style={{ fontSize: "clamp(3rem, 8vw, 6rem)", lineHeight: 1.05 }}
-        >
-          <span style={{ color: "var(--accent)" }}>Mini</span>Mind
-        </h1>
-        <p className="text-lg" style={{ color: "var(--text-secondary)", maxWidth: 520 }}>
-          Educational LLM powered by GPT-2 — see how transformers think
-        </p>
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "0 24px",
+        background: "var(--bg-primary)",
+      }}
+    >
+      {/* Logo mark */}
+      <div
+        style={{
+          width: 48,
+          height: 48,
+          borderRadius: 14,
+          background: "var(--accent)",
+          marginBottom: 32,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <span style={{ color: "#fff", fontSize: 20, fontWeight: 600 }}>M</span>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-lg">
-        <Link
-          href="/chat"
-          className="flex flex-col items-center gap-2 px-6 py-8 rounded-2xl transition-all"
-          style={{ background: "var(--bg-surface)", border: "1px solid var(--border)" }}
-        >
-          <span className="text-2xl">💬</span>
-          <span className="font-semibold">Chat</span>
-          <span className="text-xs" style={{ color: "var(--text-secondary)" }}>
-            Conversational interface
-          </span>
-        </Link>
+      {/* Headline */}
+      <h1
+        style={{
+          fontSize: "clamp(2.5rem, 6vw, 4rem)",
+          fontWeight: 600,
+          letterSpacing: "-0.03em",
+          color: "var(--text-primary)",
+          marginBottom: 12,
+          lineHeight: 1.1,
+        }}
+      >
+        MiniMind
+      </h1>
 
-        <Link
-          href="/playground"
-          className="flex flex-col items-center gap-2 px-6 py-8 rounded-2xl transition-all"
-          style={{ background: "var(--bg-surface)", border: "1px solid var(--border)" }}
-        >
-          <span className="text-2xl">🧪</span>
-          <span className="font-semibold">Playground</span>
-          <span className="text-xs" style={{ color: "var(--text-secondary)" }}>
-            Tune parameters live
-          </span>
-        </Link>
+      <p
+        style={{
+          fontSize: 16,
+          color: "var(--text-secondary)",
+          marginBottom: 48,
+          maxWidth: 400,
+          textAlign: "center",
+          lineHeight: 1.5,
+        }}
+      >
+        A minimal interface for exploring language models
+      </p>
 
-        <Link
-          href="/model-info"
-          className="flex flex-col items-center gap-2 px-6 py-8 rounded-2xl transition-all"
-          style={{ background: "var(--bg-surface)", border: "1px solid var(--border)" }}
-        >
-          <span className="text-2xl">🧠</span>
-          <span className="font-semibold">Model Info</span>
-          <span className="text-xs" style={{ color: "var(--text-secondary)" }}>
-            Architecture deep-dive
-          </span>
-        </Link>
+      {/* CTA */}
+      <button
+        onClick={() => router.push("/chat")}
+        style={{
+          padding: "14px 32px",
+          fontSize: 15,
+          fontWeight: 500,
+          color: "#fff",
+          background: "var(--accent)",
+          border: "none",
+          borderRadius: "var(--radius-md)",
+          cursor: "pointer",
+          transition: "opacity 0.15s ease",
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
+        onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+      >
+        Start chatting
+      </button>
 
-        <Link
-          href="/settings"
-          className="flex flex-col items-center gap-2 px-6 py-8 rounded-2xl transition-all"
-          style={{ background: "var(--bg-surface)", border: "1px solid var(--border)" }}
-        >
-          <span className="text-2xl">⚙️</span>
-          <span className="font-semibold">Settings</span>
-          <span className="text-xs" style={{ color: "var(--text-secondary)" }}>
-            Generation params
-          </span>
+      {/* Footer */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 32,
+          display: "flex",
+          gap: 32,
+          fontSize: 13,
+          color: "var(--text-muted)",
+        }}
+      >
+        <Link href="/chat" style={{ color: "inherit", textDecoration: "none" }}>
+          Chat
+        </Link>
+        <Link href="/model-info" style={{ color: "inherit", textDecoration: "none" }}>
+          Model
+        </Link>
+        <Link href="/settings" style={{ color: "inherit", textDecoration: "none" }}>
+          Settings
         </Link>
       </div>
     </div>

@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
       tokens: Array.from(generatedText).map((_, i) => i),
       log_probs: generatedText.split("").map(() => Math.random() * -1),
       attention_weights: generateMockAttention(generatedText.length),
-      token_details: generatedText.split("").map((char, i) => ({
+      token_details: generatedText.split("").map((char: string, i: number) => ({
         id: i,
         str: char,
       })),

@@ -1,5 +1,5 @@
 "use client";
-import { Conversation } from "@/lib/api";
+import { Conversation } from "@/lib/storage";
 
 interface ChatSidebarProps {
   conversations: Conversation[];

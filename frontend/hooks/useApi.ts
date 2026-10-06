@@ -2,17 +2,19 @@
 import { useState, useCallback } from "react";
 import {
   generate,
+  getModelInfo,
+  GenerateResponse,
+  ModelInfo,
+} from "@/lib/api";
+import {
   listConversations,
   createConversation,
   deleteConversation,
   getMessages,
   saveMessage,
-  getModelInfo,
-  GenerateResponse,
   Conversation,
   Message,
-  ModelInfo,
-} from "@/lib/api";
+} from "@/lib/storage";
 
 export function useApi() {
   const [loading, setLoading] = useState(false);

@@ -119,9 +119,9 @@ export default function ChatPage() {
       <ChatSidebar
         conversations={conversations}
         activeId={activeId}
-        onNewChat={handleNewChat}
-        onSelectChat={handleSelectChat}
-        onDeleteChat={handleDeleteChat}
+        onNew={handleNewChat}
+        onSelect={handleSelectChat}
+        onDelete={handleDeleteChat}
       />
       <main className="flex-1 flex flex-col overflow-hidden">
         <div className="flex-1 overflow-y-auto p-6">
@@ -145,7 +145,7 @@ export default function ChatPage() {
         </div>
         <div className="p-4 border-t" style={{ borderColor: "var(--border)" }}>
           <div className="max-w-3xl mx-auto">
-            <ChatInput onSend={handleSend} disabled={loading || !activeId} />
+            <ChatInput onSend={handleSend} disabled={loading} />
           </div>
         </div>
       </main>

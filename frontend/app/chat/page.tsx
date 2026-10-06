@@ -15,11 +15,6 @@ import {
 
 type Model = "claude" | "huggingface";
 
-const MODEL_LABELS: Record<Model, string> = {
-  claude: "Claude",
-  huggingface: "GPT-2",
-};
-
 export default function ChatPage() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeId, setActiveId] = useState<number | null>(null);
@@ -69,139 +64,130 @@ export default function ChatPage() {
   };
 
   const handleSend = async (text: string) => {
-    const convId = activeId ?? createConversation().id;
-    if (!activeId) {
-      const conv = createConversation();
-      setConversations((prev) => [conv, ...prev]);
-      setActiveId(conv.id);
-    }
+    if (!activeId) return;
 
-    const userMsg: Message = {
-      id: Date.now(),
-      role: "user",
-      content: text,
-      timestamp: Date.now(),
-      model,
-    };
-    const botMsg: Message = {
-      id: Date.now() + 1,
-      role: "assistant",
-      content: "",
-      timestamp: Date.now(),
-      model,
-    };
-
-    setMessages((prev) => [...prev, userMsg, { ...botMsg }]);
+    const userMsg: Message = { role: "user", content: text };
+    setMessages((prev) => [...prev, userMsg]);
+    saveMessage(activeId, userMsg);
     setLoading(true);
 
     try {
       const endpoint = model === "claude" ? "/api/claude" : "/api/huggingface";
-      const response = await fetch(endpoint, {
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt: text,
-          maxTokens: 500,
-          temperature: 0.7,
-        }),
+        body: JSON.stringify({ message: text }),
       });
 
-      const data = await response.json();
-      const text = data.text || "No response generated.";
-
-      setMessages((prev) =>
-        prev.map((m) => (m.id === botMsg.id ? { ...m, content: text } : m))
-      );
-      saveMessage(convId, { ...userMsg, conversationId: convId });
-      saveMessage(convId, { ...botMsg, conversationId: convId, content: text });
-    } catch (error) {
-      setMessages((prev) =>
-        prev.map((m) =>
-          m.id === botMsg.id ? { ...m, content: "Error: Generation failed" } : m
-        )
-      );
+      const data = await res.json();
+      const reply: Message = {
+        role: "assistant",
+        content: data.response || data.error?.message || "Something went wrong.",
+      };
+      setMessages((prev) => [...prev, reply]);
+      saveMessage(activeId, reply);
+    } catch {
+      const err: Message = { role: "assistant", content: "Failed to get response." };
+      setMessages((prev) => [...prev, err]);
+      saveMessage(activeId, err);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div
-      className="flex h-screen"
-      style={{ background: "var(--bg-primary)" }}
-    >
-      {/* Sidebar */}
+    <div style={{ display: "flex", height: "100vh", background: "var(--bg-primary)" }}>
       <ChatSidebar
-        conversations={conversations}
         activeId={activeId}
-        onSelect={handleSelectChat}
         onNew={handleNewChat}
+        onSelect={handleSelectChat}
         onDelete={handleDeleteChat}
       />
 
-      {/* Main Chat Area */}
-      <main className="flex-1 flex flex-col" style={{ background: "var(--bg-primary)" }}>
-        {/* Apple-style top bar */}
+      <main style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        {/* Header */}
         <header
-          className="flex items-center justify-between px-6 py-4"
-          style={{ borderBottom: "1px solid var(--border)" }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "12px 24px",
+            flexShrink: 0,
+          }}
         >
-          <h1 className="text-xl font-semibold" style={{ color: "var(--text-primary)" }}>
-            Chat
-          </h1>
-          <div className="flex items-center gap-1 p-1 rounded-xl" style={{ background: "var(--bg-surface)" }}>
+          <div style={{ fontSize: 15, fontWeight: 500, color: "var(--text-primary)" }}>
+            {conversations.find((c) => c.id === activeId)?.title || "New Chat"}
+          </div>
+
+          {/* Model Toggle */}
+          <div style={{ display: "flex", gap: 0, background: "var(--bg-surface)", borderRadius: 8, padding: 2, border: "1px solid var(--border)" }}>
             {(["claude", "huggingface"] as Model[]).map((m) => (
               <button
                 key={m}
                 onClick={() => setModel(m)}
-                className="px-4 py-1.5 rounded-lg text-sm font-medium transition-all"
                 style={{
+                  padding: "5px 12px",
+                  fontSize: 12,
+                  fontWeight: 500,
+                  border: "none",
+                  borderRadius: 6,
+                  cursor: "pointer",
                   background: model === m ? "var(--bg-primary)" : "transparent",
                   color: model === m ? "var(--text-primary)" : "var(--text-secondary)",
-                  boxShadow: model === m ? "var(--shadow-sm)" : "none",
                 }}
               >
-                {MODEL_LABELS[m]}
+                {m === "claude" ? "Claude" : "GPT-2"}
               </button>
             ))}
           </div>
         </header>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto px-6 py-8">
+        <div style={{ flex: 1, overflowY: "auto", padding: "16px 0" }}>
           {messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full gap-4">
-              <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center"
-                style={{ background: "var(--accent-dim)" }}
-              >
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.5">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                </svg>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100%",
+                gap: 8,
+              }}
+            >
+              <div style={{ fontSize: 13, color: "var(--text-secondary)" }}>
+                Start a conversation
               </div>
-              <h2 className="text-2xl font-semibold" style={{ color: "var(--text-primary)" }}>
-                Chat with {MODEL_LABELS[model]}
-              </h2>
-              <p style={{ color: "var(--text-secondary)", textAlign: "center", maxWidth: 360 }}>
-                A compact large language model for educational purposes. Ask anything to get started.
-              </p>
             </div>
           ) : (
-            <div className="max-w-2xl mx-auto space-y-6">
-              {messages.map((msg) => (
-                <ChatMessage key={msg.id} message={msg} />
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {messages.map((msg, i) => (
+                <ChatMessage key={i} message={msg} />
               ))}
+              {loading && (
+                <div style={{ display: "flex", justifyContent: "flex-start", paddingLeft: 0, paddingRight: 80 }}>
+                  <div
+                    style={{
+                      padding: "10px 14px",
+                      fontSize: 14,
+                      color: "var(--text-secondary)",
+                      background: "var(--bg-surface)",
+                      borderRadius: 16,
+                      borderBottomLeftRadius: 4,
+                    }}
+                  >
+                    Thinking...
+                  </div>
+                </div>
+              )}
               <div ref={bottomRef} />
             </div>
           )}
         </div>
 
-        {/* Input Area */}
-        <div
-          className="px-6 py-4"
-          style={{ borderTop: "1px solid var(--border)" }}
-        >
-          <div className="max-w-2xl mx-auto">
+        {/* Input */}
+        <div style={{ padding: "0 24px 20px", flexShrink: 0 }}>
+          <div style={{ maxWidth: 640, margin: "0 auto" }}>
             <ChatInput onSend={handleSend} disabled={loading} />
           </div>
         </div>

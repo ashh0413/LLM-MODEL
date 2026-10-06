@@ -18,47 +18,56 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 items-end">
-      <div className="flex-1 relative">
-        <textarea
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              handleSubmit(e);
-            }
-          }}
-          rows={1}
-          placeholder="Ask anything..."
-          disabled={disabled}
-          className="w-full rounded-2xl px-4 py-3.5 text-base resize-none transition-all"
-          style={{
-            background: "var(--bg-surface)",
-            border: "1px solid var(--border)",
-            color: "var(--text-primary)",
-            minHeight: 48,
-            maxHeight: 120,
-            outline: "none",
-            fontFamily: "inherit",
-          }}
-        />
-      </div>
+    <form onSubmit={handleSubmit} style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
+      <textarea
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleSubmit(e);
+          }
+        }}
+        placeholder="Message..."
+        disabled={disabled}
+        rows={1}
+        style={{
+          flex: 1,
+          padding: "12px 14px",
+          fontSize: 14,
+          fontFamily: "inherit",
+          background: "var(--bg-surface)",
+          border: "1px solid var(--border)",
+          borderRadius: "var(--radius-md)",
+          color: "var(--text-primary)",
+          resize: "none",
+          outline: "none",
+          minHeight: 44,
+          maxHeight: 120,
+          lineHeight: 1.4,
+        }}
+      />
       <button
         type="submit"
         disabled={disabled || !value.trim()}
-        className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all"
         style={{
-          background: disabled || !value.trim() ? "var(--bg-surface)" : "var(--accent)",
-          color: disabled || !value.trim() ? "var(--text-secondary)" : "#fff",
-          cursor: disabled || !value.trim() ? "not-allowed" : "pointer",
-          border: "none",
-          boxShadow: disabled || !value.trim() ? "none" : "var(--shadow-sm)",
+          width: 36,
+          height: 36,
+          background: value.trim() && !disabled ? "var(--accent)" : "var(--bg-surface)",
+          color: value.trim() && !disabled ? "#fff" : "var(--text-muted)",
+          border: "1px solid var(--border)",
+          borderRadius: "var(--radius-sm)",
+          cursor: value.trim() && !disabled ? "pointer" : "default",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          transition: "all 0.15s ease",
+          flexShrink: 0,
         }}
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="22" y1="2" x2="11" y2="13"/>
-          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+          <line x1="12" y1="19" x2="12" y2="5" />
+          <polyline points="5 12 12 5 19 12" />
         </svg>
       </button>
     </form>

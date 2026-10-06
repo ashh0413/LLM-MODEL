@@ -9,37 +9,28 @@ export default function ChatMessage({ message }: ChatMessageProps) {
   const isUser = message.role === "user";
   return (
     <div
-      className="flex gap-3 animate-fadeIn"
       style={{
+        display: "flex",
         justifyContent: isUser ? "flex-end" : "flex-start",
+        paddingLeft: isUser ? 80 : 0,
+        paddingRight: isUser ? 0 : 80,
       }}
     >
-      {!isUser && (
-        <div
-          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold"
-          style={{ background: "var(--accent)", color: "#fff" }}
-        >
-          M
-        </div>
-      )}
       <div
-        className="max-w-[70%] rounded-2xl px-4 py-3 text-sm leading-relaxed"
         style={{
-          background: isUser ? "var(--accent)" : "var(--bg-surface)",
+          maxWidth: "70%",
+          padding: "10px 14px",
+          fontSize: 14,
+          lineHeight: 1.5,
           color: isUser ? "#fff" : "var(--text-primary)",
-          border: isUser ? "none" : "1px solid var(--border)",
+          background: isUser ? "var(--accent)" : "var(--bg-surface)",
+          borderRadius: 16,
+          borderBottomRightRadius: isUser ? 4 : 16,
+          borderBottomLeftRadius: isUser ? 16 : 4,
         }}
       >
         {message.content}
       </div>
-      {isUser && (
-        <div
-          className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold"
-          style={{ background: "var(--bg-elevated)", color: "var(--text-secondary)" }}
-        >
-          U
-        </div>
-      )}
     </div>
   );
 }
